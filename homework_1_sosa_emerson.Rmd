@@ -9,22 +9,21 @@ date: "30 January 2019"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+My Github repository for my assignments can be found at this URL: https://github.com/emers-glue/compscix-415-2-assignments.git
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+data("WorldCities")
+library(mdsr)
+library(tidyverse)
+data("WorldCities")
+The WorldCities data set contains 23,018 observations and 10 variables. 
+Variable names include code, name, latitude, longitude, country, countryRegion, population, among others. 
+glimpse(WorldCities)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+View(WorldCities)
 
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+WorldCities <- head(WorldCities, 200) # 200 rows
+country_col <- WorldCities$country
+unique(country_col)
+region_col <- WorldCities$region
+unique(region_col)
+country_col <- select(WorldCities, country)

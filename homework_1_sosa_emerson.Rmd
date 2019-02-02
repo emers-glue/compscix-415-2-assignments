@@ -5,25 +5,29 @@ author: "emerson sosa"
 date: "30 January 2019"
 ---
 
+```{r load_packages, warning=FALSE, message=FALSE}```
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-My Github repository for my assignments can be found at this URL: https://github.com/emers-glue/compscix-415-2-assignments.git
-
-data("WorldCities")
 library(mdsr)
 library(tidyverse)
+```
+```{r}
 data("WorldCities")
-The WorldCities data set contains 23,018 observations and 10 variables. 
-Variable names include code, name, latitude, longitude, country, countryRegion, population, among others. 
 glimpse(WorldCities)
-
-View(WorldCities)
-
 WorldCities <- head(WorldCities, 200) # 200 rows
 country_col <- WorldCities$country
 unique(country_col)
 region_col <- WorldCities$region
 unique(region_col)
-country_col <- select(WorldCities, country)
+WorldCities %>% select(country) %>% unique()
+WorldCities %>% ggplot(aes(x = population)) + 
+  geom_histogram()
+WorldCities %>% ggplot(aes(x = population)) + 
+   geom_histogram() + ylab("This should be vertical") + xlab("This should be horizontal") + ggtitle("Plot for HW 1") + theme_bw()
+```
+
+My Github repository for my assignments can be found at this URL: https://github.com/emers-glue/compscix-415-2-assignments.git
+
+Question 1:
+There are 23,018 observations and 10 variables names. The variable names are code, name, latitude, longitude, country, countryRegion, population, regionCode, region, date.
+

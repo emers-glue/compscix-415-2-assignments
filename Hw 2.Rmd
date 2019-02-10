@@ -1,0 +1,61 @@
+---
+title: "HW 2"
+author: "Emerson Sosa"
+date: "2/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 3.2.4 Exercises
+
+1. When running ggplot(data = mpg), only a blank graph is displayed. 
+2. There are 234 rows and 11 columns in mpg.
+3. Vairable drv describes what type of wheel drive the car has: e.g., front wheel drive (f), rear wheel drive (r), or four wheel drive (4wd).
+4. see graph below
+5. Plotting class and drv variables are not useful because they are both categorical and are not continous. 
+```{r}
+library(ggplot2)
+ggplot(data = mpg) + ggtitle("Question #1")
+mpg
+?mpg
+ggplot(data = mpg) + geom_point(mapping = aes(x =hwy, y = cyl)) + ggtitle("Question #4")
+ggplot(data = mpg) + geom_point(mapping = aes(x =class, y = drv)) + ggtitle("Question #5")
+```
+
+## 3.3.1 Exercises
+
+1. The points are not blue because ggplot is looking for data in the third position where color = "blue" is. If one would like the points to be blue, one would have to close the aes argument and + the color blue outside of it: e.g., geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+2. Manufacturer, model, cyl, trans, drv, fuel type, class are categorical. Displ, year, cty, hwy are continuous. One can gauge this when by seeing what are the headers for the columns and seeing whether the data in the rows are numbers or words. There are exceptions to this as a categories can be made up of discrete numbers. 
+3. Shape cannot be mapped to a continous variable due to its nature of not being a continuous aesthetic. For continuous variables, it would be better to use aesthetics such as color and size but the same is not true for categorical variables, possibly. 
+4. Mapping several aesthetics to a single continuous variable compounds their effects on each other. 
+5. The stroke aesthetic modifies the width of the border. Stroke generally works with all shapes but for detailed shapes such as 8, 10, 12, 13, resolution is lost when increasing stroke. 
+6. When using (in)equalities to map variables, it creates two classes based on whether the argument is fulfilled. In this case, cars with a displacement lower than 5 have been colored blue. 
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = cty)) + ggtitle("Question 3: Using color as a continuous variable")
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, size = cty)) + ggtitle("Question 3: Using size as a continuous variable")
+ggplot(data = mpg) + ggtitle("Question 3: Using shape as a continuous variable \nBlank due to error when running")
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy, size = cty, color = cty, stroke = cty)) + ggtitle("Question 3: Using multiple aesthetics for a single variable")
+?geom_point
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = drv, y = class), shape = 1, stroke = 10) + ggtitle("Question 5: Using shapes and strokes")
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = drv, y = class), shape = 3, stroke = 10) + ggtitle("Question 5: Using shapes and strokes")
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = drv, y = class), shape = 13, stroke = 10) + ggtitle("Question 5: Using shapes and strokes")
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = drv, y = class), shape = 21, stroke = 10) + ggtitle("Question 5: Using shapes and strokes")
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = cty, y = displ)) + ggtitle("Question 6: Mapping to something else") +
+aes(colour = displ < 5)
+```
+
+

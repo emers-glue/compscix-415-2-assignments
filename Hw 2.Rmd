@@ -55,7 +55,74 @@ ggplot(data = mpg) +
 geom_point(mapping = aes(x = drv, y = class), shape = 21, stroke = 10) + ggtitle("Question 5: Using shapes and strokes")
 ggplot(data = mpg) +
 geom_point(mapping = aes(x = cty, y = displ)) + ggtitle("Question 6: Mapping to something else") +
-aes(colour = displ < 5)
+aes(colour = displ < 5) + theme_void()
+```
+
+## 3.5.1 Exercises
+
+4. The advantages to using the facet function compared to the color function is that it is easier to analyze each variable individually. When the color function is used for a data set that has a lot of categorical variables, it will be harder to distinguish between them. Even for continuous variables, there will come a point where using color will not be useful in distinguishing minute differences in the data. 
+5. nrow is able to list how may rows of grpahs are displayed. ncol does the same for the columns. One is able to also shrink scales to fit data, rank tables, and switch labelling. facet_grid() does not have nrow or ncol because ggplot creates the columns and rows automatically to make efficient the use of columns and rows.  
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2, as.table = TRUE)
+?facet_wrap
+```
+
+## 3.6.1 Exercises
+
+1. For line charts, use geom_abline, geom_hline, or geom_vline. For a boxplot, use geom_boxplot. For histogram, use geom_histogram. For area chart, use geom_area. 
+2. I predict that displacement, highway mpg, and wheel drive will be plotted in a point graph and on a regressional line.
+3. show.legend = FALSE is supposed to suppress legend illustration although I could not get it to work. 
+4. By running ?geom_smooth, I can see that se enables a confidence interval for the line. 
+5. The graphs will look the same because they are both graphing the same data and variables. The first code is more efficient however because the data is mapped first, then the layers are added via open mapping underneath -> ()
+6. (extra credit)
+
+```{r}
+?geom_smooth
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv, show.legend = FALSE)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE) + ggtitle("Question #2")
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth() + ggtitle("Question #5 comparison")
+
+ggplot() + 
+  geom_point(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_smooth(data = mpg, mapping = aes(x = displ, y = hwy)) + ggtitle("Question #5 comparison")
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(stroke = 2) + 
+  geom_smooth(se = FALSE) + ggtitle("Question #6.1")
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv), se = FALSE) +
+  geom_point(mapping = aes(x = displ, y = hwy, stroke = 2)) +   ggtitle("Question #6.2")
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv, color = drv), se = FALSE) +
+  geom_point(mapping = aes(x = displ, y = hwy, stroke = 2, color = drv)) +   ggtitle("Question #6.3")
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = drv, stroke = 2)) + 
+  geom_smooth(se = FALSE)+ ggtitle("Question #6.4")
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = drv, stroke = 2)) + 
+ geom_smooth(mapping = aes(linetype = drv), se = FALSE) + ggtitle("Question #6.5")
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = drv, stroke = 2, ))  +
+  geom_point(shape = 1, size = 12,colour = "white", fill = "white") +
+  ggtitle("Question #6.6")
 ```
 
 
+## 3.7.1 Exercises
+
+2.geom_bar() makes the height of the bar proportional to the number of cases in each group (or if the weight aesthetic is supplied, the sum of the weights). If you want the heights of the bars to represent values in the data, use geom_col() instead
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop..))
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
+```
+
+## Last question
+
+In https://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2012/3/2/1330695817953/EMC2-graphic-on-data-scie-008.jpg, the consistency of the color pallete is professional. The fact that the format is presented in a vertical jpeg is weird and tough to zoom into. The first graphic uses a pie chart which is not good for discerning differences between the categories. It seems as thought the data scientist wanted to present a wide variety of data graphs and in doing so, sacrificed a clear presentation for some. There was nice usage of the alpha presenter when showing the percent of what the biggest obstacle to data science adoptation. The last graphic is peculiar as well because a color pallete is used to discriminate the categories in an arbitrary fashion where a bar graph would be more effective since there seems to be a significant difference when looking at the graphic designer category. 

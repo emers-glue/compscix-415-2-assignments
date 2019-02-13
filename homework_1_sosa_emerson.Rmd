@@ -5,7 +5,8 @@ author: "emerson sosa"
 date: "30 January 2019"
 ---
 
-```{r load_packages, warning=FALSE, message=FALSE}```
+```{r load_packages, warning=FALSE, message=FALSE}
+```
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(mdsr)

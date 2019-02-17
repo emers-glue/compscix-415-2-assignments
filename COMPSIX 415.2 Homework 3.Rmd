@@ -2,7 +2,12 @@
 title: "COMPSCIX 415.2 Homework 3"
 author: "Emerson Sosa"
 date: "2/16/2019"
-output: html_document
+output: 
+   html_document:
+     theme: darkly
+     highlight: espresso
+     font-family: Courier
+     code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -12,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r load_packages, warning=FALSE, message=FALSE}
 ```
 
-# Libraries used
+## Libraries used:
 ```{r}
 library(ggplot2)
 library(nycflights13)
@@ -20,7 +25,48 @@ library(nycflights13)
 
 
 
+
 ## Section 3.8.1 Exercises (all)
+##
+
+#### *1. What is the problem with this plot? How could you improve it?*
+
+The problem with the first plot is that there are too many overlapping points on the graph. Using the `geom_jitter` aesthetic allows for a more accurate illustration of the data.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point() +
+  ggtitle("Without jitter")
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_jitter() +
+  ggtitle("With jitter")
+```
+
+
+#### *2. What parameters to `geom_jitter()` control the amount of jittering?*
+
+Using `height` and `width` will adjust the spread parameters. If not used, jitter will be set to 40% of the resolution.
+
+```{r}
+?geom_jitter
+```
+
+#### *3. Compare and contrast `geom_jitter()` with `geom_count`.* 
+
+The aesthetic `geom_jitter` gives a spread around the same observation while `geom_count` represents the overlapping values with area. A point that has at least 5 observations will have an area of 5 while a value that is observed at least 10 will have a corresponding area. 
+
+```{r}
+?geom_count
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_jitter() +
+  ggtitle("With jitter")
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+ geom_count() +
+  ggtitle("With count")
+```
+
+
+#### *4. What's the default position for adjustment for `geom_boxplot()`? Create a visualization of the `mpg` dataset that demonstrates it.*
 
 ## Section 3.9.1 (2 and 4)
 

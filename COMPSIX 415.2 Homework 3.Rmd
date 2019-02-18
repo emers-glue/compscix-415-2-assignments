@@ -30,7 +30,7 @@ library(nycflights13)
 
 #### *1. What is the problem with this plot? How could you improve it?*
 
-The problem with the first plot is that there are too many overlapping points on the graph. Using the `geom_jitter` aesthetic allows for a more accurate illustration of the data.
+The problem with the first plot is that there are too many overlapping points on the graph. Using the <font color = "blue">`geom_jitter`</font> aesthetic allows for a more accurate illustration of the data.
 
 ```{r}
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
@@ -42,17 +42,18 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 ```
 
 
-#### *2. What parameters to `geom_jitter()` control the amount of jittering?*
 
-Using `height` and `width` will adjust the spread parameters. If not used, jitter will be set to 40% of the resolution.
+#### *2. What parameters to <font color = "blue">`geom_jitter()`</font> control the amount of jittering?*
+
+Using <font color = "blue">`height`</font> and <font color = "blue">`width`</font> will adjust the spread parameters. If not used, jitter will be set to 40% of the resolution.
 
 ```{r}
 ?geom_jitter
 ```
 
-#### *3. Compare and contrast `geom_jitter()` with `geom_count`.* 
+#### *3. Compare and contrast <font color = "blue">`geom_jitter()`</font> with <font color = "blue">`geom_count`</font>.* 
 
-The aesthetic `geom_jitter` gives a spread around the same observation while `geom_count` represents the overlapping values with area. A point that has at least 5 observations will have an area of 5 while a value that is observed at least 10 will have a corresponding area. 
+The aesthetic <font color = "blue">`geom_jitter`</font> gives a spread around the same observation while <font color = "blue">`geom_count`</font> represents the overlapping values with area. A point that has at least 5 observations will have an area of 5 while a value that is observed at least 10 will have a corresponding area. 
 
 ```{r}
 ?geom_count
@@ -65,9 +66,9 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 ```
 
 
-#### *4. What's the default position for adjustment for `geom_boxplot()`? Create a visualization of the `mpg` dataset that demonstrates it.*
+#### *4. What's the default position for adjustment for <font color = "blue">`geom_boxplot()`</font>? Create a visualization of the `mpg` dataset that demonstrates it.*
 
-By looking up the aesthetic via `?geom_boxplot`, under the "Computed variables" section, it shows that the lower whisker is negative 1.5 X the interquartile range; the lower hinge is at the 25% quantile; middle is the median; upper hinge is the 75% quantile; ymax is positive 1.5 X the interquartile range.
+By looking up the aesthetic via <font color = "blue">`?geom_boxplot`</font>, under the "Computed variables" section, it shows that the lower whisker is negative 1.5 X the interquartile range; the lower hinge is at the 25% quantile; middle is the median; upper hinge is the 75% quantile; ymax is positive 1.5 X the interquartile range.
 
 The boxplot below shows the highway mpg for cars based on their wheel drive. The front wheel drive cars show the greatest mpg efficiency while 4 wheel drive and rear wheel drive are similar with rear wheel drive being more efficient and with less variability in obversations compared to 4 wheel drive. 
 
@@ -80,17 +81,17 @@ ggplot(mpg, aes(drv, hwy)) +
 
 ## Section 3.9.1 (2 and 4)
 
-#### *2. What does `labs()` do?*
+#### *2. What does <font color = "blue">`labs()`</font> do?*
 
-`labs()` gives the user the ability to add titles, subtitles, and captions to plots. 
+<font color = "blue">`labs()`</font> gives the user the ability to add titles, subtitles, and captions to plots. 
 
 ```{r}
 ?labs
 ```
 
-#### *4. What does the plot below tell you about the relationship between city and highway mpg? Why is `coord_fixed()` important? What does `geom_abline()` do?*
+#### *4. What does the plot below tell you about the relationship between city and highway mpg? Why is <font color = "blue">`coord_fixed()`</font> important? What does <font color = "blue">`geom_abline()`</font> do?*
 
-Using the `geom_abline` as a reference where the slope is equal to 1, the plot shows that all cars have a higher mpg efficiency on the highway compared to the city (`geom_abline` creates a slope of the graph and include an x intercept). As cars become more efficient overall, their efficiency is increased on the highway as well. In other words, cars that are efficient overall do even better on the highway. `coord_fixed() is important because it creates a one-to-one proportionality between the scale on the x and y axis. This is important in this graph because the unit of measure, miles, should be seen as equal on both scales. 
+Using the <font color = "blue">`geom_abline`</font> as a reference where the slope is equal to 1, the plot shows that all cars have a higher mpg efficiency on the highway compared to the city (<font color = "blue">`geom_abline`</font> creates a slope of the graph and include an x intercept). As cars become more efficient overall, their efficiency is increased on the highway as well. In other words, cars that are efficient overall do even better on the highway. `coord_fixed() is important because it creates a one-to-one proportionality between the scale on the x and y axis. This is important in this graph because the unit of measure, miles, should be seen as equal on both scales. 
 
 ```{r}
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
@@ -113,12 +114,12 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 #### *1. Why does this code not work?*
 
-`
+<font color = "blue">`
 my_variable <- 10  
 (my_varıable)  
-`
+`</font>
 
-The code above does not work because we are calling a non-existent value because `my_varlable` with an l has not been defined. Only `my_variable` with an i has. 
+The code above does not work because we are calling a non-existent value because <font color = "blue">`my_varlable`</font> with an l has not been defined. Only `my_variable` with an i has. 
 
 #### *2. Tweak each of the following R commands so that they run correctly:*
 
@@ -163,12 +164,14 @@ filter(flights, carrier == "UA" | carrier == "AA" | carrier == "DL")
 
 #### *1.4 Departed in the summer*
 
+86,326 flights departed in the summer.
+
 ```{r}
 ?flights
 distinct(flights, month)
 filter(flights, month == 7 | month == 8 | month == 9)
 ```
-86,326 flights departed in the summer.
+
 
 #### *1.5 Arrive more than two hours late, but didn't leave late*
 
@@ -185,7 +188,7 @@ There were no flights that fit the above criteria but flight 51 was very close t
 select(filter(flights, dep_delay >= 60 & arr_delay < 0), flight, arr_delay)
 ```
 
-#### *Departed between midnight and 6am*
+#### *1.7 Departed between midnight and 6am*
 
 9,344 flights departed between midnight and 6am.
 
@@ -209,22 +212,19 @@ filter(flights, is.na(dep_time))
 
 ## Section 5.4.1 (1 and 3)
 
-## R Markdown
+#### *1. Brainstorm as many ways as possible to select <font color = "blue">`dep_time`, `dep_delay`, `arr_time`</font>, and <font color = "blue">`arr_delay`</font> from flights.*
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+I don't really understand what the question is asking but I am assuming that it is asking the combinations in which the above variables can be called upon. You would just multiply the variables with each other to find the amount of variation, similar to a factorial. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+#### *3. What does the <font color = "blue">one_of()</font> function do? Why might it be helpful in conjunction with this vector?*
 
-```{r cars}
-summary(cars)
+<font color = "blue">`vars <- c("year", "month", "day", "dep_delay", "arr_delay")`</font>
+
+The <font color = "blue">`one_of`</font> function matches variable names in a character vector. This might be helpful when trying to match class types. 
+
+```{r}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+select(flights, year, month, day, dep_delay, one_of(vars))
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -120,7 +120,7 @@ my_variable <- 10
 
 The code above does not work because we are calling a non-existent value because `my_varlable` with an l has not been defined. Only `my_variable` with an i has. 
 
-#### *2. Tweak each of the following R commands so that they run correctly:
+#### *2. Tweak each of the following R commands so that they run correctly:*
 
 To run the code correctly, I had to correct `fliter` to `filter`, set a `==` to 8 as a singular `=` isn't recognized by R. The diamond data was also removed as we were using the mpg data set and not the diamond data set. 
 
@@ -135,6 +135,77 @@ filter(mpg, cyl == 8)
 
 
 ## Section 5.2.4 (1,3,4)
+
+#### *1.1 Find all flights that had an arrival delay of two or more hours*
+
+There were 10,190 flights that were delayed at by at least two hours.
+
+```{r}
+filter(flights, arr_delay >= 120 )
+```
+
+#### *1.2 Flew to Houston*
+
+9,313 flights flew to Houston.
+
+```{r}
+filter(flights, dest == "IAH" | dest == "HOU")
+```
+
+#### *1.3 Were operated by United, American or Delta*
+
+139,504 flights were run by either United, American, or Delta.
+
+```{r}
+distinct(flights, carrier)
+filter(flights, carrier == "UA" | carrier == "AA" | carrier == "DL")
+```
+
+#### *1.4 Departed in the summer*
+
+```{r}
+?flights
+distinct(flights, month)
+filter(flights, month == 7 | month == 8 | month == 9)
+```
+86,326 flights departed in the summer.
+
+#### *1.5 Arrive more than two hours late, but didn't leave late*
+
+Three flights fit the above criteria
+```{r}
+filter(flights, arr_delay >= 120 & dep_delay == 0)
+```
+
+#### *1.6 Were delayed by at least an hour but made up over 30 mintues in flight*
+
+There were no flights that fit the above criteria but flight 51 was very close to achieving that. 
+
+```{r}
+select(filter(flights, dep_delay >= 60 & arr_delay < 0), flight, arr_delay)
+```
+
+#### *Departed between midnight and 6am*
+
+9,344 flights departed between midnight and 6am.
+
+```{r}
+select(filter(flights, dep_time >= 0000 & dep_time <= 600), flight, dep_time)
+```
+
+
+#### * 3. How many flights have a missing `dep_time`? What other variables are missing? What might these rows represent?*
+
+8,255 flights have a missing `dep_time` among other values. This is most likely canceled flights. 
+
+```{r}
+filter(flights, is.na(dep_time))
+```
+
+
+#### *4. Why is `NA ^ 0` not missing? Why is `NA | TRUE` not missing? Why is `FALSE & NA` not missing? Can you figure out the general rule? (`NA x 0` is a tricky counterexample!)*
+
+`NA ^ 0` is not missing because any number to the zeroeth power is 1. `NA | TRUE` is not missing because we are assuming `NA` exists. The same is implied in `FALSE & NA`. Using `NA` assumes that a number does exist.
 
 ## Section 5.4.1 (1 and 3)
 

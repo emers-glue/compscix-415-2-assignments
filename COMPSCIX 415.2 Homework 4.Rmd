@@ -14,8 +14,218 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+
+## Libraries used:
 ```{r load_packages, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(nycflights13)
+library(tidyverse)
 ```
+
+## Section 5.6.7
+
+#### *2. Come up with another approach that will give you the same output as <font color = "blue">`not_cancelled %>% count(dest)`</font> and <font color = "blue">`not_cancelled %>% count(tailnum, wt = distance)`</font> (without using <font color = "blue">`count()`</font>.)*
+
+```{r}
+#defining not_cancelled
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+#using count()
+not_cancelled %>% 
+  count(dest)
+
+#not using count()
+not_cancelled %>%
+  group_by(dest) %>%
+  summarise(n = n())
+
+#using count()
+not_cancelled %>% 
+  count(tailnum, wt = distance)
+
+#not using count()
+not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(n = sum(distance))
+?flights
+```
+
+## *4. Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?*
+
+The structure of this question made it very hard for me to understand what was being asked. Therefore, I drew up an analysis where I plotted all flights that were cancelled on an axis of months and days. I could not find any sort of pattern. I found this question to be extremely frustrating and I feel it is because I don't have a grasp on the code surrounding the summarise function.
+
+```{r}
+
+cancelled <- flights %>% 
+  filter(is.na(dep_delay),
+         is.na(arr_delay))
+cancelled %>%
+  count(month, day) %>% 
+  ggplot(aes(month, day)) +
+  geom_count() +
+  geom_smooth(se = FALSE)
+  
+summarise(flights)
+  
+?summarise
+```
+
+#### *5. Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))*
+
+#### *6. What does the sort argument to count() do. When might you use it?*
+
+It would be useful when wanting to sort the count in order. 
+
+```{r}
+flights %>% 
+  count(day)
+
+
+
+flights %>%
+  count(flight, sort = TRUE)
+
+?sort()
+```
+
+
+## Section 10
+
+#### *1. How can you tell if an object is a tibble? (Hint: try printing mtcars, which is a regular data frame).*
+
+A tibble would only display the first 10 rows and only the columns that fit on the screen. The first printed table does not truncate after 10 rows. 
+
+```{r}
+mtcars
+as_tibble(mtcars)
+```
+
+
+#### *2. Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?*
+
+Using a data.frame as compared to a tibble will potentially produce subsetting that is too general. When comparing the two below, the lax parsing behevior is evident in data.frame subsetting. 
+
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+df <- tibble(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+```
+
+
+#### *3 If you have the name of a variable stored in an object, e.g. var <- "mpg", how can you extract the reference variable from a tibble?*
+
+To extract a variable from a tibble, one must name the tibble, then call it using either the <font color = "blue">`$`</font> or <font color = "blue">`[[`</font> function. I attempted to use the <font color = "blue">`filter(var)`</font> function but it did not work and I am unsure why that is the case. 
+```{r}
+example <- tribble(
+  ~var, ~ mpg, 
+   1, 2, 1, 2
+)  
+
+example$var
+
+```
+
+
+#### *6. What option controls how many additional column names are printed at the footer of a tibble?*
+
+Use <font color = "blue">`options(tibble.width = ())`</font> to denote how many columns or if you want to denote all columns regardless of screen size, inlcude <font color = "blue">`Inf`</font> in the denoter.
+
+## Section 12.3.3
+
+#### *2. Why does this code fail? <font color = "blue">`table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")`</font>*
+  
+The code above did not work because it did not have the tick marks around the years. 
+
+```{r}
+(table4a <- tribble(
+  ~country, ~`1999`, ~`2000`,
+  #--|--|----
+  "Afghanistan", 745, 2666,
+  "Brazil", 37737, 80488,
+  "China", 212258, 213766
+))
+
+table4a %>% 
+  gather(`1999`, `2000`, key = "year", value = "cases")
+```
+
+
+#### *3. Why does spreading this tibble fail? How could you add a new column to fix the problem?*
+
+The spreading fails because Phillip Woods has two instances of age. I deleted the second instance of age for Phillip Woods to allow for proper spreading. It was not obvious why there were two instances of age
+
+```{r}
+library(tidyverse)
+(people <- tribble(
+  ~name, ~k, ~count, 
+  #-----------------|--------|------
+  "Phillip Woods", "age", 45, 
+  "Phillip Woods", "height", 186, 
+  
+  "Jessica Cordero", "age", 37, 
+  "Jessica Cordero", "height", 156
+))
+
+people %>% 
+  spread(key = k, value = count)
+```
+
+
+#### *4. Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?*
+
+To tidy the data, it needs to be gathered. The variable are "pregnant", "sex", and "n".
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+preg %>% 
+  gather(male, female, key ="sex", value = "n")
+```
+
+
+## Section 12.4.3
+
+#### *1. What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.*
+
+They help fill in gaps and add values to a vector.
+
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"), extra = "drop", fill = "right")
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"), extra = "drop", fill = "right")
+
+
+?separate
+```
+
+
+#### *2. Both unite() and separate() have a remove argument. What does it do? Why would you set it to FALSE?*
+
+Per `?separate`, remove function removes the input column from the the output data frame. If you want to keep the input column, you would need to put false. 
+
+```{r}
+(tab4 <- table4a %>% 
+  gather(`1999`, `2000`, key = "year", value = "cases"))
+
+tab4 %>% 
+  unite(whatev, year, cases, remove = TRUE)
+```
+
+
 
 ## R Markdown
 

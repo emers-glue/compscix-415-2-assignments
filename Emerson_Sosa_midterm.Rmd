@@ -2,29 +2,39 @@
 title: "COMPSCIX 415.2 Homework 5/Midterm"
 author: "Emerson Sosa"
 date: "3/2/2019"
-output: html_document
+output: 
+   html_document:
+     theme: darkly
+     highlight: espresso
+     code_folding: hide
+     toc: true
+     collapsed: true
+     number_sections: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+<font color=blue> </font>
+<font color=#873f05> </font>
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# <font color=#873f05>The tidyverse packages</font>
 
-```{r cars}
-summary(cars)
-```
+#### *Can you name which package is associated with each task below?*
 
-## Including Plots
 
-You can also embed plots, for example:
+1. Plotting: For plotting, use the <font color=blue>`ggplot2`</font> package.
+2. Data munging/wrangling: For data wrangling use the <font color=blue>`dplyr`</font> package.
+3. Reshaping data: To reshape the data use the <font color=blue>`tidyr`</font> package.?
+4. Importing/exporting data: For importing and exporting, use the <font color=blue>`readr`</font> package.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+#### *Now can you name two functions that you've used from each package that you listed above for these tasks?*
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+1. Plotting: In conjunction with <font color=blue>`ggplot2`</font>, I have used the <font color=blue>`geom_point()`</font> and <font color=blue>`geom_count()`</font> for visualizing data. 
+2. Data munging/wrangling: The <font color=blue>`filter()`</font> function has been very useful for me and I have admired the power of the <font color=blue>`summarise()`</font> when used with the <font color=blue>`group_by()`</font> function.
+3. Reshaping data: Understanding the usage of <font color=blue>`gather()`</font> and <font color=blue>`spread()`</font> will be essential when colloborating with others as it cannot be assumed that they will be using tidy data. 
+4. Importing/exporting data: To import data, use <font color=blue>`read_csv()`</font> to import and <font color=blue>`write_csv()`</font> to export as a csv. file. 
+
+# <font color=#873f05>R Basics</font>

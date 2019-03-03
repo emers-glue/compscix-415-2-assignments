@@ -38,3 +38,34 @@ knitr::opts_chunk$set(echo = TRUE)
 4. Importing/exporting data: To import data, use <font color=blue>`read_csv()`</font> to import and <font color=blue>`write_csv()`</font> to export as a csv. file. 
 
 # <font color=#873f05>R Basics</font>
+
+#### *1. Fix this code with the fewest number of changes possible so it works:*
+
+I added quote marks around the tag to allow the exclamation point.
+
+```{r}
+('My_data.name___is.too00ooLong!' <- c( 1 , 2   , 3 ))
+```
+
+
+#### *2. Fix this code so it works:*
+
+To fix, I changed the case of the concatenation function to lower case and added a quote end mark to <i>it</i>.
+
+```{r}
+(my_string <- c('has', 'an', 'error', 'in', 'it'))
+```
+
+
+#### *3. Look at the code below and comment on what happened to the values in the vector.*
+
+R does not need quotes around numbers when making them a vector. When quotes are placed around them, R forces the exact input inside. For example, if a space is placed inside the quote marks, r will print that extra space as well. The same is not true when adding extra spaces to numbers without quotes around the number. 
+
+```{r}
+my_vector <- c(1,2, '3', '4', 5)
+my_vector
+```
+
+
+
+

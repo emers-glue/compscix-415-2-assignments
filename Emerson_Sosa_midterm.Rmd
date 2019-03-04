@@ -10,19 +10,26 @@ output:
      toc: true
      collapsed: true
      number_sections: true
+     toc_depth: 1
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r load_packages, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+```
 
 <font color=blue> </font>
 <font color=#873f05> </font>
+<font color=#F38812 size=4> </font>
 
 # <font color=#873f05>The tidyverse packages</font>
 
-#### *Can you name which package is associated with each task below?*
+<font color=#F38812 size=4> *1. Can you name which package is associated with each task below?*</font>
 
 
 1. Plotting: For plotting, use the <font color=blue>`ggplot2`</font> package.
@@ -30,7 +37,7 @@ knitr::opts_chunk$set(echo = TRUE)
 3. Reshaping data: To reshape the data use the <font color=blue>`tidyr`</font> package.?
 4. Importing/exporting data: For importing and exporting, use the <font color=blue>`readr`</font> package.
 
-#### *Now can you name two functions that you've used from each package that you listed above for these tasks?*
+<font color=#F38812 size=4> *2. Now can you name two functions that you've used from each package that you listed above for these tasks?*</font>
 
 1. Plotting: In conjunction with <font color=blue>`ggplot2`</font>, I have used the <font color=blue>`geom_point()`</font> and <font color=blue>`geom_count()`</font> for visualizing data. 
 2. Data munging/wrangling: The <font color=blue>`filter()`</font> function has been very useful for me and I have admired the power of the <font color=blue>`summarise()`</font> when used with the <font color=blue>`group_by()`</font> function.
@@ -39,7 +46,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # <font color=#873f05>R Basics</font>
 
-#### *1. Fix this code with the fewest number of changes possible so it works:*
+<font color=#F38812 size=4> *1. Fix this code with the fewest number of changes possible so it works:*</font>
 
 I added quote marks around the tag to allow the exclamation point.
 
@@ -48,7 +55,7 @@ I added quote marks around the tag to allow the exclamation point.
 ```
 
 
-#### *2. Fix this code so it works:*
+<font color=#F38812 size=4> *2. Fix this code so it works:* </font>
 
 To fix, I changed the case of the concatenation function to lower case and added a quote end mark to <i>it</i>.
 
@@ -57,7 +64,7 @@ To fix, I changed the case of the concatenation function to lower case and added
 ```
 
 
-#### *3. Look at the code below and comment on what happened to the values in the vector.*
+<font color=#F38812 size=4> *3. Look at the code below and comment on what happened to the values in the vector.* </font>
 
 R does not need quotes around numbers when making them a vector. When quotes are placed around them, R forces the exact input inside. For example, if a space is placed inside the quote marks, r will print that extra space as well. The same is not true when adding extra spaces to numbers without quotes around the number. 
 
@@ -66,6 +73,123 @@ my_vector <- c(1,2, '3', '4', 5)
 my_vector
 ```
 
+
+# <font color=#873f05>Data import/export</font>
+
+<font color=#F38812 size=4> *1. Download the rail_trail.txt file from Canvas (in the Midterm Exam section) and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.*</font>
+
+```{r}
+rail.trail.path <- 
+  'rail_trail.txt'
+rail.trail.data <-
+  read_delim('rail_trail.txt', delim = '|')
+glimpse(rail.trail.data)
+```
+
+
+<font color=#F38812 size=4>*2. Export the file into a comma-separated file and name it “rail_trail.csv”. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.* </font>
+
+```{r}
+write_csv(rail.trail.data, 'rail.trail.csv')
+rail.trail.csv <-
+  read_csv('rail.trail.csv')
+glimpse(rail.trail.csv)
+```
+
+
+# <font color=#873f05>Visualization</font>
+
+<font color=#F38812 size=4>*1. Critique this graphic: give only three examples of what is wrong with this graphic.*</font>
+
+1. The choice in colors for the genders is a bit confusing. A byproduct of our patriarchal society lends colors like pink and purple being femenized, therefore it is a bit hard to detach the color from women. It would have been better to assign gender nuetral colors instead. 
+2. The tidy data does not adhere to the tidy data tenets because gender is clumped into two observations instead of being spread across the ages. It would have been better to spread the genders across age groups instead to see if there are distinctions there. 
+3. The presentations of the circles in this graphic also presents the problem of relative sizes. It is hard to distinguish the magnitude of each circle just by looking at the sizes and the inclusion of the value of each cirlce is really needed to sift through the sizes of each. It would have been better to do some sort of bar graph allowing the reader to quickly distinguish the difference in sizes by the height of each observation. 
+
+<img src="https://i.imgur.com/z4E79r1.jpgAMAYAwBgDAGAMAYAwD/2Q==" >
+
+<font color=#F38812 size=4>*2. Reproduce this graphic using the diamonds data set.*</font>
+
+<img src="https://i.imgur.com/FnaWNcD.jpg">
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat, group = cut)) +
+  geom_boxplot(aes(fill = color)) +
+  labs(x ="CUT OF DIAMOND", y ="CARAT OF DIAMOND") + 
+  coord_flip()
+
+```
+
+<font color=#F38812 size=4>*3. The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.*</font>
+
+
+# <font color=#873f05>Data munging and wrangling</font>
+
+<font color=#F38812 size=4>*1. Is this data “tidy”? *</font>
+
+The data was not tidy because it needed spreading because there were two variables in `type`. The `spread()` function was used. 
+
+```{r}
+(table2)
+table2 %>% 
+  spread(key = type, value = count)
+```
+
+<font color=#F38812 size=4>*2. Create a new column in the diamonds data set called price_per_carat that shows the price of each diamond per carat (hint: divide). Only show me the code, not the output.*</font>
+
+
+`diamonds %>% mutate(price_per_carat = price/carat)` 
+
+
+
+<font color=#F38812 size=4>*3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit. Do the results make sense? Why? Do we need to be wary of any of these numbers? Why?*</font>
+
+```{r}
+
+(filter(diamonds, price > 1000 & carat < 1.5) %>% 
+   count())
+spec.diamonds <- filter(diamonds, price > 1000 & carat < 1.5) %>% 
+   count()
+
+(spec.diamonds/count(diamonds))
+
+x <- sample(1:10, 1e5, rep = TRUE)
+n_distinct(x)
+```
+
+# <font color=#873f05>EDA</font>
+
+<font color=#F38812 size=4>*1. During what time period is this data from?*</font>
+
+The data is for the years of 2000-2015.
+
+```{r}
+?txhousing
+distinct(txhousing, year)
+
+```
+
+
+<font color=#F38812 size=4>*2. How many cities are represented?*</font>
+
+46 "cities" are represented.
+
+```{r}
+distinct(txhousing, city)
+```
+
+
+<font color=#F38812 size=4>*3. Which city, month and year had the highest number of sales?*</font>
+
+```{r}
+
+```
+
+
+<font color=#F38812 size=4>*4. What kind of relationship do you think exists between the number of listings and the number of sales?  Check your assumption and show your work.*</font>
+
+<font color=#F38812 size=4>*5. What proportion of sales is missing for each city?*</font>
+
+<font color=#F38812 size=4>*6. Looking at only the cities and months with greater than 500 sales: Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work. Any cities that stand out that you’d want to investigate further? Why might we want to filter out all cities and months with sales less than 500?*</font>
 
 
 

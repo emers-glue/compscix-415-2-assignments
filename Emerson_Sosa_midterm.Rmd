@@ -76,7 +76,7 @@ my_vector
 
 # <font color=#873f05>Data import/export</font>
 
-<font color=#F38812 size=4> *1. Download the rail_trail.txt file from Canvas (in the Midterm Exam section) and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.*</font>
+<font color=#F38812 size=4> *1. Download the rail_trail.txt file from Canvas and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.*</font>
 
 ```{r}
 rail.trail.path <- 
@@ -105,28 +105,39 @@ glimpse(rail.trail.csv)
 2. The tidy data does not adhere to the tidy data tenets because gender is clumped into two observations instead of being spread across the ages. It would have been better to spread the genders across age groups instead to see if there are distinctions there. 
 3. The presentations of the circles in this graphic also presents the problem of relative sizes. It is hard to distinguish the magnitude of each circle just by looking at the sizes and the inclusion of the value of each cirlce is really needed to sift through the sizes of each. It would have been better to do some sort of bar graph allowing the reader to quickly distinguish the difference in sizes by the height of each observation. 
 
-<img src="https://i.imgur.com/z4E79r1.jpgAMAYAwBgDAGAMAYAwD/2Q==" >
+<center><img src="https://i.imgur.com/z4E79r1.jpgAMAYAwBgDAGAMAYAwD/2Q==" ></center>
 
 <font color=#F38812 size=4>*2. Reproduce this graphic using the diamonds data set.*</font>
 
 <img src="https://i.imgur.com/FnaWNcD.jpg">
 
 ```{r}
-ggplot(data = diamonds, mapping = aes(x = cut, y = carat, group = cut)) +
-  geom_boxplot(aes(fill = color)) +
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat, fill = color)) +
+  geom_boxplot(position = 'identity') +
   labs(x ="CUT OF DIAMOND", y ="CARAT OF DIAMOND") + 
-  coord_flip()
+  coord_flip() +
+  scale_fill_manual(values=c("#cc5b39", "#918612", "green", "#1bbaac", "#52b4e5", "#8f6dd6", "#e54ed6")) 
 
 ```
 
 <font color=#F38812 size=4>*3. The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.*</font>
+
+By changing the position from `'identity` to `dodge`, the color group is more distinct and not crowded.
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat, fill = color)) +
+  geom_boxplot(position = 'dodge') +
+  labs(x ="CUT OF DIAMOND", y ="CARAT OF DIAMOND") + 
+  coord_flip() +
+  scale_fill_manual(values=c("#cc5b39", "#918612", "green", "#1bbaac", "#52b4e5", "#8f6dd6", "#dd38e2"))
+```
 
 
 # <font color=#873f05>Data munging and wrangling</font>
 
 <font color=#F38812 size=4>*1. Is this data “tidy”? *</font>
 
-The data was not tidy because it needed spreading because there were two variables in `type`. The `spread()` function was used. 
+No, the data was not tidy because it needed spreading because there were two variables in `type`. The `spread()` function was used. 
 
 ```{r}
 (table2)
@@ -143,17 +154,26 @@ table2 %>%
 
 <font color=#F38812 size=4>*3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit. Do the results make sense? Why? Do we need to be wary of any of these numbers? Why?*</font>
 
+834 diamonds have a price > 10000 and a carat < 1.5. Diamonds that have a carat of 1.0 - 1.3 have about the same price. If one assumes that the most important factor for price is carat, than this data seems suspect. Because of this plateau in the data, more information on the diamonds in this particular region would be needed such as color, cut, etc. 
+
 ```{r}
 
-(filter(diamonds, price > 1000 & carat < 1.5) %>% 
-   count())
-spec.diamonds <- filter(diamonds, price > 1000 & carat < 1.5) %>% 
+(filter(diamonds, price > 10000 & carat < 1.5)) %>% 
+   count()
+n.spec.diamonds <- filter(diamonds, price > 10000 & carat < 1.5) %>% 
    count()
 
-(spec.diamonds/count(diamonds))
+(n.spec.diamonds/count(diamonds))
 
-x <- sample(1:10, 1e5, rep = TRUE)
-n_distinct(x)
+spec.diamonds <- (filter(diamonds, price > 10000 & carat < 1.5))
+
+top.diam <- select(spec.diamonds, price, carat) %>% 
+  filter(price > 10000)
+
+ggplot(top.diam, aes(carat, price)) +
+  geom_smooth()
+ggplot(diamonds, aes(carat, price)) +
+  geom_smooth()
 ```
 
 # <font color=#873f05>EDA</font>
@@ -181,7 +201,7 @@ distinct(txhousing, city)
 <font color=#F38812 size=4>*3. Which city, month and year had the highest number of sales?*</font>
 
 ```{r}
-
+arrange(txhousing, city, sales)
 ```
 
 

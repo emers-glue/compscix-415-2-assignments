@@ -23,9 +23,7 @@ library(tidyverse)
 library(dplyr)
 ```
 
-<font color=blue> </font>
-<font color=#873f05> </font>
-<font color=#F38812 size=4> </font>
+https://github.com/emers-glue/compscix-415-2-assignments
 
 # <font color=#873f05>The tidyverse packages</font>
 
@@ -154,7 +152,7 @@ table2 %>%
 
 <font color=#F38812 size=4>*3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit. Do the results make sense? Why? Do we need to be wary of any of these numbers? Why?*</font>
 
-834 diamonds have a price > 10000 and a carat < 1.5. Diamonds that have a carat of 1.0 - 1.3 have about the same price. If one assumes that the most important factor for price is carat, than this data seems suspect. Because of this plateau in the data, more information on the diamonds in this particular region would be needed such as color, cut, etc. 
+834 diamonds (1.5% from the total amount of diamonds) have a price > 10000 and a carat < 1.5. Diamonds that have a carat of 1.0 - 1.3 have about the same price. If one assumes that the most important factor for price is carat, than this data seems suspect. Because of this plateau in the data, more information on the diamonds in this particular region would be needed such as color, cut, etc. 
 
 ```{r warning=FALSE, message=FALSE}
 
@@ -163,7 +161,7 @@ table2 %>%
 n.spec.diamonds <- filter(diamonds, price > 10000 & carat < 1.5) %>% 
    count()
 
-(n.spec.diamonds/count(diamonds))
+(n.spec.diamonds/count(diamonds) *100)
 
 spec.diamonds <- (filter(diamonds, price > 10000 & carat < 1.5))
 
@@ -205,6 +203,7 @@ Houston had the highest number of sales with 1,043,999
 
 June had the highest number of sales.
 
+2006 had the highest number of sales.
 
 ```{r warning=FALSE, message=FALSE}
 sales.per.city <- arrange(txhousing, city, sales) %>% 
@@ -217,9 +216,10 @@ arrange(sales.per.city, desc(sales))
 ggplot(txhousing, aes(month, sales)) +
   geom_col()
 
-filter(txhousing, year == 2006 & year == 2014) %>% 
-  ggplot(aes(year, sales)) +
-  geom_col()
+select(txhousing, year, sales) %>% 
+  group_by(year) %>% 
+  summarise(sales.per.year = sum(sales, na.rm = TRUE)) %>% 
+  arrange(desc(sales.per.year))
 ```
 
 
@@ -235,7 +235,57 @@ ggplot(txhousing, aes(listings, sales)) +
 
 <font color=#F38812 size=4>*5. What proportion of sales is missing for each city?*</font>
 
+This question was confusing because after sorting the data, there were no cities with missing sales values. After further combing, one city was close to fulfilling this criteria: San Marcos had only 6 sales in October of 2011. There were missing values in listings but since the questions was not in relation to listings, I did not do the analysis.  
+
+```{r}
+(missing.sales <- txhousing %>% 
+  filter(is.na(city)))
+
+(not.missing.sales <- txhousing %>% 
+  filter(!is.na(city)))
+
+(not.missing.listings <- txhousing %>% 
+  filter(!is.na(listings)))
+
+```
+
+```{r}
+(txhousing %>% 
+  select(city, sales, month, year) %>% 
+  arrange(!desc(sales))) %>% 
+  filter(sales < 9)
+  
+
+```
+
+
 <font color=#F38812 size=4>*6. Looking at only the cities and months with greater than 500 sales: Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work. Any cities that stand out that you’d want to investigate further? Why might we want to filter out all cities and months with sales less than 500?*</font>
 
+The distributions of the median sales price when grouped by city and month are different. There is more variation when looking at city. The data is more homogenous for months. Collin County has the highest median sale price which is interesting as, per wikipedia, only has a population of less than 800,000 people. Having a filter of more than 500 sales ensures a large enough sample size so that outliers don't affect the average median sale price.  
+
+```{r warning=FALSE, message=FALSE}
+(five.hundred <- txhousing %>%
+  filter(sales > 500)) 
+
+(city.500 <- five.hundred %>% 
+  group_by(city) %>% 
+  summarise(median = mean(median)) %>% 
+  arrange(desc(median)))
+ 
+month.500 <- five.hundred %>% 
+  group_by(month) %>% 
+  summarise(median = mean(median))
+
+ggplot(month.500, aes(month, median)) +
+  geom_point() + 
+  geom_smooth()
+
+ggplot(city.500, aes(city, median)) +
+  geom_point() +
+  geom_smooth() +
+  coord_flip()
+ 
+
+```
 
 

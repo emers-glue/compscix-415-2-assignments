@@ -13,7 +13,7 @@ output:
      toc_depth: 1
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -26,11 +26,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 There are three variables in the Whickham dataset.
 
-<font color=#F38812 size=4> *How many observations are there and what does each represent?*</font>
+<font color=#F38812 size=4> *2. How many observations are there and what does each represent?*</font>
 
 There are 1,314 observations in the Whickham data set where 'outcome' = survival status after 20 years with two factors: Alive, Dead; 'smoker' = smoking status at baseline with two factors: No, Yes; 'age' = age in years at the time of the first survey. 
 
-<font color=#F38812 size=4> *Create a table (use the R code below as a guide) and a visualization of the relationship between smoking status and outcome, ignoring age. What do you see? Does it make sense?*</font>
+<font color=#F38812 size=4> *3. Create a table (use the R code below as a guide) and a visualization of the relationship between smoking status and outcome, ignoring age. What do you see? Does it make sense?*</font>
 
 It does not make sense because one would assume that if one is a smoker, there is a higher probablity of death. The opposite is true. 
 
@@ -55,38 +55,146 @@ Whickham.counts %>%
 
 ```
 
-<font color=#F38812 size=4> *Recode the age variable into an ordered factor with three categories: age <= 44, age > 44 & age <= 64, and age > 64. Now, recreate visualization from above, but facet on your new age factor. What do you see? Does it make sense?*</font>
+<font color=#F38812 size=4> *4. Recode the age variable into an ordered factor with three categories: age <= 44, age > 44 & age <= 64, and age > 64. Now, recreate visualization from above, but facet on your new age factor. What do you see? Does it make sense?*</font>
 
 
 ```{r}
 
 age <- Whickham %>% 
   select(age)
-  age.cat <- case_when(age <= 44 ~ '<= 44',
+age.cat <- case_when(age <= 44 ~ '<= 44',
                       age > 44  & age <= 64 ~ '> 44 & <= 64',
                       age > 64 ~ '> 64')
   
-  age.cat
+age.fact <- factor(age.cat, ordered = TRUE)
+  
+Whickham.counts <- Whickham %>% 
+  arrange(smoker, outcome, age) %>% 
+  count(smoker, outcome)
+  
+Whickham.counts %>% 
+  ggplot() + geom_bar(aes(x = smoker, y = n, fill = outcome), stat = 'identity', position = 'fill') +
+  scale_fill_manual(values=c("green", "red"))
+#> tried to do facet_grid(age.fact) here but I could not figure out how to add it to the Whickham counts tibble which is what I think I need to do. 
+  
+  
+
+```
+
+# <font color=#873f05>Exercise 2</font>
+
+<font color=#F38812 size=4> *1. Generate a random sample of size n = 10000 from a gamma(1,2) distribution and plot a histogram or density curve. Use the code below to help you get your sample.*</font>
+
+`library(tidyverse)`
+`n <- 10000`
+`gamma_samp <- tibble(x = rgamma(n, shape = 1, scale = 2))`
+
+```{r message=FALSE, warning=FALSE}
+n <- 10000
+gamma.samp <- tibble(x = rgamma(n, shape =1, scale = 2))
+
+ggplot(gamma.samp) +
+  geom_histogram(aes(x))
 ```
 
 
+<font color=#F38812 size=4>*2.What is the mean and standard deviation of your sample? They should both be close to 2 because for a gamma distribution:*
+*mean = shape x scale*
+*variance = shape x scale^2*</font>
 
-## R Markdown
+Mean = 2.01
+SD = 2.05
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+values.x <- gamma.samp %>% 
+  select(x)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+mean(gamma.samp$x)
 
-```{r cars}
-summary(cars)
+sd(gamma.samp$x)
+
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+`mean_samp <- gamma_samp %>% .[['x']] %>% mean()`
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+<font color=#F38812 size=4>*3.Pretend the distribution of our population of data looks like the plot above. Now take a sample of size n = 30 from a Gamma(1,2) distribution, plot the histogram or density curve, and calculate the mean and standard deviation.*</font>
+
+Mean = 1.79
+SD = 1.87
+
+```{r message=FALSE, warning=FALSE}
+just.30 <- gamma.samp %>% 
+  sample_n(30)
+
+
+ggplot(just.30) +
+  geom_histogram(aes(x))
+
+mean(just.30$x)
+
+sd(just.30$x)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+<font color=#F38812 size=4>*4.Take a sample of size n = 30, again from the Gamma(1,2) distribution, calculate the mean, and assign it to a vector named mean_samp. Repeat this 10000 times!!!! The code below might help.*</font>
+
+```{r}
+gamma.samp <- tibble(x = rgamma(n, shape =1, scale = 2))
+gamma.samp
+
+mean.samp <- mean(gamma.samp$x, na.rm = TRUE) 
+
+mean_samp <- rep(NA, 10000)
+for(i in 1:10000) {
+  g_samp <- rgamma(30, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+mean_samp <- tibble(mean_samp)
+mean_samp
+```
+
+
+<font color=#F38812 size=4>*5.Make a histogram of your collection of means from above (mean_samp).*</font>
+
+```{r message=FALSE, warning=FALSE}
+
+mean_samp %>% 
+  ggplot() +
+  geom_histogram(aes(mean_samp))
+```
+
+
+<font color=#F38812 size=4>*6.Calculate the mean and standard deviation of all of your sample means.*</font>
+
+The mean is 2.01.
+The standard deviation is 0.37.
+
+```{r}
+mean(mean_samp$mean_samp)
+sd(mean_samp$mean_samp)
+```
+
+
+<font color=#F38812 size=4>*7.Did anything surprise you about your answers to #6?*</font>
+
+The opposite happened for me as the smaller standard deviation shows that the sample of means when wrung through the standard deviation formula shows that the data got tighter; a smaller SD means that there is less variation in the data, which is what we wanted out of a sample of means. 
+
+<font color=#F38812 size=4>*8. According to the Central Limit Theorem, the mean of your sampling distribution should be very close to 2, and the standard deviation of your sampling distribution should be close to σn‾√=230‾‾‾√=0.365. Repeat #4-#6, but now with a sample of size n = 300 instead. Do your results match up well with the theorem?*</font>
+
+The results of making the sample size n = 300 does not match up well with the theoretical results nor with the computed results of n = 30. The standard deviation was 0.12, less than half of the latter result. This result makes intuitive sense because with a larger sample size, a smaller standard deviation can be expected. 
+
+```{r}
+mean_samp <- rep(NA, 10000)
+for(i in 1:10000) {
+  g_samp <- rgamma(300, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+mean_samp <- tibble(mean_samp)
+
+mean(mean_samp$mean_samp)
+sd(mean_samp$mean_samp)
+```
+

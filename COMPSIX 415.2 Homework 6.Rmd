@@ -17,6 +17,60 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<font color=#873f05> </font>
+<font color=#F38812 size=4> </font>
+
+# <font color=#873f05>Exercise 1</font>
+
+<font color=#F38812 size=4> *1. What variables are in this data set?* </font>
+
+There are three variables in the Whickham dataset.
+
+<font color=#F38812 size=4> *How many observations are there and what does each represent?*</font>
+
+There are 1,314 observations in the Whickham data set where 'outcome' = survival status after 20 years with two factors: Alive, Dead; 'smoker' = smoking status at baseline with two factors: No, Yes; 'age' = age in years at the time of the first survey. 
+
+<font color=#F38812 size=4> *Create a table (use the R code below as a guide) and a visualization of the relationship between smoking status and outcome, ignoring age. What do you see? Does it make sense?*</font>
+
+It does not make sense because one would assume that if one is a smoker, there is a higher probablity of death. The opposite is true. 
+
+`library(mosaicData)`    
+`library(tidyverse)`    
+`Whickham %>% count( _________ , _________ )`
+
+```{r message = FALSE, warning=FALSE}
+library(tidyverse)
+library(mosaicData)
+(data(Whickham))
+glimpse(Whickham)
+Whickham.counts <- Whickham %>% 
+  count(smoker, outcome) 
+
+
+  
+Whickham.counts %>% 
+  ggplot() + geom_bar(aes(x = smoker, y = n, fill = outcome), stat = 'identity', position = 'fill') +
+  scale_fill_manual(values=c("green", "red"))
+
+
+```
+
+<font color=#F38812 size=4> *Recode the age variable into an ordered factor with three categories: age <= 44, age > 44 & age <= 64, and age > 64. Now, recreate visualization from above, but facet on your new age factor. What do you see? Does it make sense?*</font>
+
+
+```{r}
+
+age <- Whickham %>% 
+  select(age)
+  age.cat <- case_when(age <= 44 ~ '<= 44',
+                      age > 44  & age <= 64 ~ '> 44 & <= 64',
+                      age > 64 ~ '> 64')
+  
+  age.cat
+```
+
+
+
 ## R Markdown
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.

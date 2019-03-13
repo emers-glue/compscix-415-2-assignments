@@ -9,30 +9,121 @@ output:
      code_folding: hide
      toc: true
      collapsed: true
-     number_sections: true
+     number_sections: false
      toc_depth: 1
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
 ```
 
-## R Markdown
+<font color=#86efd3> </font>
+<font color=#F38812 size=4> </font>
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#<font color=#86efd3>Exercise 1</font> 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+<font color=#F38812 size=4>*Load the train.csv dataset into R. How many observations and columns are there?*</font>
 
-```{r cars}
-summary(cars)
+There are 1460 observations and 81 variables/columns.
+
+```{r warning=FALSE, message=FALSE}
+train.data <- 
+  read_csv('train.csv')
+glimpse(train.data)
+
 ```
 
-## Including Plots
+#<font color=#86efd3>Exercise 2</font>
 
-You can also embed plots, for example:
+<font color=#F38812 size=4>*1. Visualize the distribution of SalePrice*</font>
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r message=FALSE}
+train.data %>% 
+  ggplot() +
+  geom_histogram(aes(SalePrice)) 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+<font color=#F38812 size=4>*2. Visualize the covariation between SalePrice and Neighborhood.*</font>
+
+```{r}
+hood.and.price <- train.data %>% 
+  group_by(Neighborhood) %>%
+  summarise(SalePriceBar = median(SalePrice, na.rm = TRUE)) %>% 
+  arrange(desc(SalePriceBar))
+
+ggplot(hood.and.price) +
+  geom_col(aes(Neighborhood, SalePriceBar)) +
+  coord_flip()
+```
+
+
+<font color=#F38812 size=4>*3. Visualize the covariation between SalePrice and OverallQual.*</font>
+
+```{r}
+qual.and.price <- train.data %>% 
+  group_by(OverallQual) %>%
+  summarise(SalePriceBar = median(SalePrice, na.rm = TRUE))
+
+ggplot(qual.and.price) +
+  geom_col(aes(OverallQual, SalePriceBar)) +
+  coord_flip()
+```
+
+#<font color=#86efd3>Exercise 3</font>
+
+<font color=#F38812 size=4>*1. Take a look at the coefficient*</font>
+
+The coefficient is 45436 when using Overall Quality as `x`.
+
+```{r}
+(train.lm <- lm(formula = SalePrice ~ OverallQual, data = train.data))
+tidy(train.lm)
+```
+
+
+<font color=#F38812 size=4>*2. Compare the coefficient to the average value of SalePrice*</font>
+
+The coefficient is much smaller than the coefficient.
+
+```{r}
+mean(train.data$SalePrice) 
+train.lm
+```
+
+
+<font color=#F38812 size=4>*3. Take a look at the R-squared*</font>
+
+The R squared is 0.63
+
+```{r}
+glance(train.lm)
+```
+
+#<font color=#86efd3>Exercise 4</font>
+
+<font color=#F38812 size=4>*1. What kind of relationship will these features have with our target?*</font>
+
+```{r}
+diam_lm <- lm(formula = price ~ carat, data = diamonds)
+
+diam_lm
+
+```
+
+
+<font color=#F38812 size=4>*2. Can the relationship be estimated linearly?*</font>
+
+<font color=#F38812 size=4>*3. Are these good features, given the problem we are trying to solve?*</font>
+
+<font color=#F38812 size=4>*4. How would you interpret the coefficients on GrLivArea and OverallQual?*</font>
+
+<font color=#F38812 size=4>*5. How would you interpret the coefficient on NeighborhoodBrkSide?*</font>
+
+<font color=#F38812 size=4>*6. Are the features significant?*</font>
+
+<font color=#F38812 size=4>*7. Are the features practically significant?*</font>
+
+<font color=#F38812 size=4>*8. Is the model a good fit?*</font>

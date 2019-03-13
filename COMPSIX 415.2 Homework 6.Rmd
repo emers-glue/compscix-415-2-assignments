@@ -43,6 +43,9 @@ library(tidyverse)
 library(mosaicData)
 (data(Whickham))
 glimpse(Whickham)
+
+
+
 Whickham.counts <- Whickham %>% 
   count(smoker, outcome) 
 
@@ -57,9 +60,10 @@ Whickham.counts %>%
 
 <font color=#F38812 size=4> *4. Recode the age variable into an ordered factor with three categories: age <= 44, age > 44 & age <= 64, and age > 64. Now, recreate visualization from above, but facet on your new age factor. What do you see? Does it make sense?*</font>
 
+The results are definitely intuitive as cancer is most lethal in older age. The younger cohorts pull the above graph towards a more biased "alive" representation. 
+
 
 ```{r}
-
 age <- Whickham %>% 
   select(age)
 age.cat <- case_when(age <= 44 ~ '<= 44',
@@ -68,18 +72,19 @@ age.cat <- case_when(age <= 44 ~ '<= 44',
   
 age.fact <- factor(age.cat, ordered = TRUE)
   
-Whickham.counts <- Whickham %>% 
-  arrange(smoker, outcome, age) %>% 
-  count(smoker, outcome)
-  
-Whickham.counts %>% 
-  ggplot() + geom_bar(aes(x = smoker, y = n, fill = outcome), stat = 'identity', position = 'fill') +
-  scale_fill_manual(values=c("green", "red"))
-#> tried to do facet_grid(age.fact) here but I could not figure out how to add it to the Whickham counts tibble which is what I think I need to do. 
-  
-  
+Whickham <- Whickham %>% 
+  mutate(age.fact)
 
+
+  
+Whickham %>% 
+  ggplot() + geom_bar(aes(x = smoker, fill = outcome), position = 'fill') +
+  facet_wrap(age.fact) +
+  scale_fill_manual(values=c("green", "red"))
 ```
+
+
+
 
 # <font color=#873f05>Exercise 2</font>
 

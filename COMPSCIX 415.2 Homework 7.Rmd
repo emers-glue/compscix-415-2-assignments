@@ -104,26 +104,92 @@ glance(train.lm)
 
 #<font color=#86efd3>Exercise 4</font>
 
-<font color=#F38812 size=4>*1. What kind of relationship will these features have with our target?*</font>
+Now fit a linear regression model using GrLivArea, OverallQual, and Neighborhood as the features. Don’t forget to look at data_description.txt to understand what these variables mean. Ask yourself these questions before fitting the model:
+
+<font color=#F38812 size=3.5>*What kind of relationship will these features have with our target?*</font>
+
+<font color=#F38812 size=3.5>*Can the relationship be estimated linearly?*</font>
+
+<font color=#F38812 size=3.5>*Are these good features, given the problem we are trying to solve?*</font>
+
+```{r warning=FALSE}
+library(tidyverse)
+data(train.data)
+
+
+
+ggplot(train.data) +
+  geom_point(aes(GrLivArea, SalePrice), alpha = .15) +
+  geom_smooth(aes(GrLivArea, SalePrice), method = "lm", se = FALSE)
+
+
+ggplot(train.data) +
+  geom_point(aes(OverallQual, SalePrice), alpha = .15) +
+  geom_smooth(aes(OverallQual, SalePrice), method = "lm", se = FALSE)
+
+ggplot(train.data) +
+  geom_boxplot(aes(Neighborhood, SalePrice)) +
+  coord_flip()
+```
+
+<font color=#F38812 size=4>*1. How would you interpret the coefficients on GrLivArea and OverallQual?*</font>
+
+For every unit of `GrLivArea` increased, the price increases by $55.56. For every unit increase of `OverallQual`, the sale price of the house increases by $20,951.
+
+In other words, the feature of OverallQual holds more weight over price increases than GrLivArea.
+```{r}
+
+train.mult.lm <- lm(formula = SalePrice ~ OverallQual + GrLivArea + Neighborhood, data = train.data)
+
+tidy(train.mult.lm)
+```
+
+<font color=#F38812 size=4>*2. How would you interpret the coefficient on NeighborhoodBrkSide?*</font>
+
+Because it is a negative value, one can assume by the data that the value of the house decreases in value by about $13,025. 
+
+
+<font color=#F38812 size=4>*3. Are the features significant?*</font>
+
+The features of `OverallQual` and `GrLivArea` are significant values based on the p value but only a handful of neighborhoods are, favoring the highest median priced neighborhoods. 
+
+
+<font color=#F38812 size=4>*4. Are the features practically significant?*</font>
+
+Again, it would seem that looking at `OverallQual` and `GrLivArea` would be conclusive indicators of correlation given the p value but one would have to comb the neighborhood data more diligently as many of the neighborhoods are not good indicators of sales price. 
+
+<font color=#F38812 size=4>*5. Is the model a good fit?*</font>
+
+Because the adjusted R squared value is close to 1, the model is a good fit. 
 
 ```{r}
-diam_lm <- lm(formula = price ~ carat, data = diamonds)
+glance(train.mult.lm)
+```
 
-diam_lm
+#<font color=#86efd3> Exercise 5</font>
 
+#<font color=#86efd3> Exercise 6</font>
+
+
+<font color=#F38812 size=3.6>*One downside of the linear model is that it is sensitive to unusual values because the distance incorporates a squared term. Fit a linear model to the simulated data below (use y as the target and x as the feature), and look at the resulting coefficients and R-squared. Rerun it about 5-6 times to generate different simulated datasets. What do you notice about the model’s coefficient on x and the R-squared values?*</font>
+
+When examining the coefficient on x, it was mostly stable, staying within the 1-2 range. The R squared value however would sometimes get smaller. Looking at a plot, one could see that when there is an outlying value, that will distort the R squared value significantly, making it seem like the model is not a good fit. 
+
+
+```{r}
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
+
+sim1a
+
+(sim.lm <- lm(formula = y ~ x, data = sim1a))
+glance(sim.lm)
+
+ggplot(sim1a) +
+  geom_jitter(aes(x,y)) +
+  geom_smooth(aes(x, y), method = "lm", se = FALSE)
 ```
 
 
-<font color=#F38812 size=4>*2. Can the relationship be estimated linearly?*</font>
-
-<font color=#F38812 size=4>*3. Are these good features, given the problem we are trying to solve?*</font>
-
-<font color=#F38812 size=4>*4. How would you interpret the coefficients on GrLivArea and OverallQual?*</font>
-
-<font color=#F38812 size=4>*5. How would you interpret the coefficient on NeighborhoodBrkSide?*</font>
-
-<font color=#F38812 size=4>*6. Are the features significant?*</font>
-
-<font color=#F38812 size=4>*7. Are the features practically significant?*</font>
-
-<font color=#F38812 size=4>*8. Is the model a good fit?*</font>

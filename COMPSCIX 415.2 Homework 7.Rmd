@@ -86,7 +86,7 @@ tidy(train.lm)
 
 <font color=#F38812 size=4>*2. Compare the coefficient to the average value of SalePrice*</font>
 
-The coefficient is much smaller than the coefficient.
+The coefficient is much smaller than the mean of the SalePrice
 
 ```{r}
 mean(train.data$SalePrice) 

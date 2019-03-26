@@ -13,26 +13,84 @@ output:
      toc_depth: 1
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r load_packages, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+
+library('rvest')
+library(jsonlite)
+library(leaflet)
+library(htmltools)
 ```
 
-## R Markdown
+```{r message=FALSE}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+library(jsonlite)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+##Dublin
+dublin.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Dublin',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
+dublin.api <- fromJSON(dublin.url, flatten = TRUE)
 
-```{r cars}
-summary(cars)
+
+Dublin <- dublin.api %>% 
+  mutate(longitude = position.lng, latitude = position.lat)
+
+
+##Luxembourg
+lux.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Luxembourg',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
+lux.api <- fromJSON(lux.url, flatten = TRUE)
+
+
+Luxembourg <- lux.api %>% 
+  mutate(longitude = position.lng, latitude = position.lat)
+
+##Seville
+sev.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Seville',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
+sev.api <- fromJSON(sev.url, flatten = TRUE)
+
+
+Seville <- sev.api %>% 
+  mutate(longitude = position.lng, latitude = position.lat)
+
+##Stockholm seems to be down
+##stockholm.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Stockholm',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
+##stockholm.api <- fromJSON(stockholm.url, flatten = TRUE)
+
+
+##stockholm.data <- stockholm.api %>% 
+  #mutate(longitude = position.lng, latitude = position.lat)
+
+##Ljubljana
+ljub.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Ljubljana',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
+ljub.api <- fromJSON(ljub.url, flatten = TRUE)
+
+
+Ljubljana <- ljub.api %>% 
+  mutate(longitude = position.lng, latitude = position.lat)
+
+##Brisbane
+bris.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Ljubljana',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
+bris.api <- fromJSON(bris.url, flatten = TRUE)
+
+
+Brisbane <- bris.api %>% 
+  mutate(longitude = position.lng, latitude = position.lat)
+
+
+##Function
+map_it <- function(city) {
+  map <- leaflet(city) %>% 
+    addTiles() %>% 
+    addMarkers()
+  return(map)
+}
+
+cities <- c('Luxembourg', 'Dublin', 'Brisbane', 'Seville', 'Stockholm', 'Ljubljana')
+
+##Try with Dublin, Luxembourg, Brisbane, Seville, Ljubljana. Stockholm does not have data. Also, using vector cities does not work. 
+map_it(Dublin)
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

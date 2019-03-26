@@ -26,7 +26,6 @@ library(htmltools)
 
 ```{r message=FALSE}
 
-library(jsonlite)
 
 ##Dublin
 dublin.url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Dublin',"&apiKey=f29cd91a8d938fff0f834c155c7c22f340a3fbf4")
@@ -82,7 +81,7 @@ Brisbane <- bris.api %>%
 map_it <- function(city) {
   map <- leaflet(city) %>% 
     addTiles() %>% 
-    addMarkers()
+    addMarkers(~longitude, ~latitude, label = ~name)
   return(map)
 }
 
@@ -91,6 +90,10 @@ cities <- c('Luxembourg', 'Dublin', 'Brisbane', 'Seville', 'Stockholm', 'Ljublja
 ##Try with Dublin, Luxembourg, Brisbane, Seville, Ljubljana. Stockholm does not have data. Also, using vector cities does not work. 
 map_it(Dublin)
 
+
+
+
 ```
+
 
 

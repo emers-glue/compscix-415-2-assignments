@@ -9,30 +9,150 @@ output:
      code_folding: hide
      toc: true
      collapsed: true
-     number_sections: true
+     number_sections: false
      toc_depth: 1
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(broom)
+library('rvest')
+library(jsonlite)
+library(leaflet)
+library(htmltools)
+library(shiny)
 ```
 
-## R Markdown
+# Exercise 1 - Sampling Distributions, Functions and For Loops
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### Step 1 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Write an R function that does the following:
 
-```{r cars}
-summary(cars)
+  - Takes a sample of size samp_size from this exponential distribution (samp_size is an        input parameter for the function)
+  - Calculates the mean of that sample
+  - Calculates the standard deviation of that sample
+  - Returns the calculated mean and standard deviation as a list
+
+```{r}
+
+# sample size
+samp_size <- 100
+
+# set the rate parameter
+samp_rate <- 1/10000
+
+# take sample
+samp.output <- rexp(n = samp_size, rate = samp_rate)
+
+
+samp_fun <- function(samp_size, samp_rate) {
+  samp_avg <- mean(samp.output)
+  samp_std_dev <- sd(samp.output)
+  stats <- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)
+  return(stats)
+}
+
+samp_fun(100000)
 ```
 
-## Including Plots
+### Step 2
 
-You can also embed plots, for example:
+Then write a loop that does this:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+  - Runs the above function 1000 times, with samp_size = 50 and samp_rate = 1/10000
+  - Saves all of the sample means in a vector called sample_means, and all of the sample        standard deviations in a vector called sample_sds
+
+```{r}
+
+# sample size
+samp_size <- 50
+
+# set the rate parameter
+samp_rate <- 1/10000
+
+# take sample
+samp.output <- rexp(n = samp_size, rate = samp_rate)
+
+
+samp_fun <- function(samp_size, samp_rate) {
+  samp_avg <- mean(samp.output)
+  samp_std_dev <- sd(samp.output)
+  stats <- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)
+  return(stats)
+}
+
+#my_mods <- my_samps <- list() # empty lists for saving models and samples
+#for(i in 1:n) {
+
+# create space for the output of your loop 
+n <- 10
+sample_means <- rep(NA, n)
+sample_sds <- rep(NA, n)
+
+# start the loop
+for(i in 1:n) {
+  sample_means[i] <- i
+}
+#  ...
+ # output_vector[index] <- output # save the output for each iteration
+#}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Exercise 2 - Linear Regression
+
+Load the train.csv dataset into R and fit a regression model with:
+
+  - y = SalePrice
+  - Features: LotArea, OverallQual, and ExterQual
+  
+```{r message=FALSE, warning=FALSE}
+library(broom)
+train.data <- 
+  read_csv('train.csv')
+
+#Analyzing regression model for SalePrice, LotArea, OverallQual, ExerQual.
+house.mult.lm <- lm(SalePrice ~ LotArea + OverallQual + ExterQual, data = train.data)
+
+tidy(house.mult.lm)
+glance(house.mult.lm)
+
+
+ggplot(train.data) +
+  geom_point(aes(ExterQual, SalePrice))
+
+#Analyzing regression model from Homework 7.
+train.mult.lm <- lm(formula = SalePrice ~ OverallQual + GrLivArea + Neighborhood, data = train.data)
+
+tidy(train.mult.lm)
+glance(train.mult.lm)
+```
+
+<font color=#F38812 size=4>Use the broom package to output the coefficients and the R-squared</font>
+
+Coefficients and R-Squared are in the outputted tibbles above. 
+
+<font color=#F38812 size=4> Interpret the coefficient on LotArea</font>
+
+The coefficient for LotArea is 1.452925. In other words, for every one unit increase in lot size in square feet, the price increases, on average, by $1.45. 
+
+<font color=#F38812 size=4>Interpret the coefficient on ExterQualGd
+ </font>
+ 
+The coefficient for ExterQualGd is -71529.49. In other words, for every one unit increase in the external quality being graded as 'Good', the price decreases, on average, by $71,529. This makes sense as the reference point is external quality being Excellent. Anything under would decrease in price.  
+
+<font color=#F38812 size=4>Compare this model to the model we fit in HW 7 with GrLivArea, OverallQual, Neighborhood. Which is the better fitting model?
+ </font>
+ 
+ Using R squared as our rationale for deciding which is the better fit, HW 7's R adjusted squared (used when there are more than one variable) is *0.782981* and the model asked to be analyzed in this homework assignment is *0.693963*. As theorized in class, an R Squared value that is closer to one is a better fit so it would seem that the model used in HW 7 is better than the one built in this assignment. 
+
+# Exercise 3 - AB Testing
+
+<font color=#86efd3>What proportion of visitors converted for each version of the webpage?
+ </font>
+
+<font color=#86efd3> Perform the AB test in R. What is the p-value for the AB test (hypothesis test of proportions)?
+</font>

@@ -302,10 +302,10 @@ samp_fun &lt;-<span class="st"> </span><span class="cf">function</span>(samp_siz
 
 <span class="kw">samp_fun</span>(<span class="dv">100000</span>)</code></pre></div>
 <pre><code>## $samp_avg
-## [1] 10946.41
+## [1] 9242.484
 ## 
 ## $samp_std_dev
-## [1] 13549.6</code></pre>
+## [1] 8728.946</code></pre>
 </div>
 <div id="step-2" class="section level3">
 <h3>Step 2</h3>
@@ -417,7 +417,39 @@ train.mult.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span cla
 <div id="exercise-3---ab-testing" class="section level1">
 <h1>Exercise 3 - AB Testing</h1>
 <p><font color="#86efd3">What proportion of visitors converted for each version of the webpage? </font></p>
+<p>Conversion rate for Version A is 4.15%. Conversion rate for Version B is 10%.</p>
 <p><font color="#86efd3"> Perform the AB test in R. What is the p-value for the AB test (hypothesis test of proportions)? </font></p>
+<p>The p-value for the two proportions is 1.829998e-09, meaning that the value is significant (less than .05) and that Version B does have changes to it that allow for higher conversion rates.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ab.data &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">read_csv</span>(<span class="st">'ab_test_data.csv'</span>)
+
+
+group.ab.data &lt;-<span class="st"> </span>ab.data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(version, conversion <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+
+group.ab.data</code></pre></div>
+<pre><code>## # A tibble: 4 x 3
+##   version `conversion == 1`     n
+##   &lt;chr&gt;   &lt;lgl&gt;             &lt;int&gt;
+## 1 A       FALSE              1917
+## 2 A       TRUE                 83
+## 3 B       FALSE              1800
+## 4 B       TRUE                200</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Conversion rate for Version A</span>
+true.a &lt;-<span class="st"> </span><span class="dv">83</span><span class="op">/</span><span class="dv">2000</span>
+
+n.a &lt;-<span class="st"> </span><span class="dv">2000</span>
+
+<span class="co">#Conversion rate for Version B</span>
+true.b &lt;-<span class="st"> </span><span class="dv">200</span><span class="op">/</span><span class="dv">2000</span>
+
+n.b &lt;-<span class="st"> </span><span class="dv">2000</span>
+
+samp.a &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n.a, <span class="dt">prob =</span> true.a)
+samp.b &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n.b, <span class="dt">prob =</span> true.b)
+two_prop_test &lt;-<span class="st"> </span><span class="kw">prop.test</span>(<span class="kw">c</span>(samp.a, samp.b), <span class="kw">c</span>(<span class="dv">2000</span>, <span class="dv">2000</span>))
+two_prop_test<span class="op">$</span>p.value</code></pre></div>
+<pre><code>## [1] 4.290716e-19</code></pre>
 </div>
 
 

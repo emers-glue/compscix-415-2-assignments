@@ -153,6 +153,38 @@ The coefficient for ExterQualGd is -71529.49. In other words, for every one unit
 
 <font color=#86efd3>What proportion of visitors converted for each version of the webpage?
  </font>
+ 
+ Conversion rate for Version A is 4.15%. Conversion rate for Version B is 10%. 
 
 <font color=#86efd3> Perform the AB test in R. What is the p-value for the AB test (hypothesis test of proportions)?
 </font>
+
+The p-value for the two proportions is 1.829998e-09, meaning that the value is significant (less than .05) and that Version B does have changes to it that allow for higher conversion rates. 
+
+```{r message=FALSE}
+ab.data <- 
+  read_csv('ab_test_data.csv')
+
+
+group.ab.data <- ab.data %>% 
+  count(version, conversion == 1)
+
+group.ab.data
+
+# Conversion rate for Version A
+true.a <- 83/2000
+
+n.a <- 2000
+
+#Conversion rate for Version B
+true.b <- 200/2000
+
+n.b <- 2000
+
+samp.a <- rbinom(n = 1, size = n.a, prob = true.a)
+samp.b <- rbinom(n = 1, size = n.b, prob = true.b)
+two_prop_test <- prop.test(c(samp.a, samp.b), c(2000, 2000))
+two_prop_test$p.value
+
+```
+

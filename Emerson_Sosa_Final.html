@@ -294,18 +294,19 @@ samp.output &lt;-<span class="st"> </span><span class="kw">rexp</span>(<span cla
 
 
 samp_fun &lt;-<span class="st"> </span><span class="cf">function</span>(samp_size, samp_rate) {
+  samp.output &lt;-<span class="st"> </span><span class="kw">rexp</span>(<span class="dt">n =</span> samp_size, <span class="dt">rate =</span> samp_rate)
   samp_avg &lt;-<span class="st"> </span><span class="kw">mean</span>(samp.output)
   samp_std_dev &lt;-<span class="st"> </span><span class="kw">sd</span>(samp.output)
   stats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">samp_avg =</span> samp_avg, <span class="dt">samp_std_dev =</span> samp_std_dev)
   <span class="kw">return</span>(stats)
 }
 
-<span class="kw">samp_fun</span>(<span class="dv">100000</span>)</code></pre></div>
+<span class="kw">samp_fun</span>(<span class="dv">100</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">10000</span>)</code></pre></div>
 <pre><code>## $samp_avg
-## [1] 9242.484
+## [1] 10388.28
 ## 
 ## $samp_std_dev
-## [1] 8728.946</code></pre>
+## [1] 12044.42</code></pre>
 </div>
 <div id="step-2" class="section level3">
 <h3>Step 2</h3>
@@ -315,34 +316,41 @@ samp_fun &lt;-<span class="st"> </span><span class="cf">function</span>(samp_siz
 <li>Saves all of the sample means in a vector called sample_means, and all of the sample standard deviations in a vector called sample_sds</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sample size</span>
-samp_size &lt;-<span class="st"> </span><span class="dv">50</span>
+<span class="co">#samp_size &lt;- 50</span>
 
 <span class="co"># set the rate parameter</span>
-samp_rate &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="dv">10000</span>
+<span class="co">#samp_rate &lt;- 1/10000</span>
 
 <span class="co"># take sample</span>
-samp.output &lt;-<span class="st"> </span><span class="kw">rexp</span>(<span class="dt">n =</span> samp_size, <span class="dt">rate =</span> samp_rate)
 
 
-samp_fun &lt;-<span class="st"> </span><span class="cf">function</span>(samp_size, samp_rate) {
-  samp_avg &lt;-<span class="st"> </span><span class="kw">mean</span>(samp.output)
-  samp_std_dev &lt;-<span class="st"> </span><span class="kw">sd</span>(samp.output)
-  stats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">samp_avg =</span> samp_avg, <span class="dt">samp_std_dev =</span> samp_std_dev)
-  <span class="kw">return</span>(stats)
-}
+
+<span class="co">#samp_fun &lt;- function(samp_size, samp_rate) {</span>
+ <span class="co"># samp.output &lt;- rexp(n = samp_size, rate = samp_rate)</span>
+  <span class="co">#samp_avg &lt;- mean(samp.output)</span>
+  <span class="co">#samp_std_dev &lt;- sd(samp.output)</span>
+  <span class="co">#stats &lt;- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)</span>
+  <span class="co">#return(stats)</span>
+<span class="co">#}</span>
+<span class="co">#samp_fun(40,1/10000)</span>
+
+<span class="co">#samp_avg</span>
 
 <span class="co">#my_mods &lt;- my_samps &lt;- list() # empty lists for saving models and samples</span>
 <span class="co">#for(i in 1:n) {</span>
 
 <span class="co"># create space for the output of your loop </span>
-n &lt;-<span class="st"> </span><span class="dv">10</span>
-sample_means &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)
-sample_sds &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n)
+<span class="co">#n &lt;- 4</span>
+<span class="co">#sample_means &lt;- rep(NA, n)</span>
+<span class="co">#sample_sds &lt;- rep(NA, n)</span>
+<span class="co">#samp_fun_all &lt;- rep(NA, n)</span>
 
 <span class="co"># start the loop</span>
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {
-  sample_means[i] &lt;-<span class="st"> </span>i
-}
+<span class="co">#for(i in 1:n) {</span>
+ <span class="co"># samp_fun_all[i] &lt;-  samp_fun(50, 1/10000)</span>
+  <span class="co">#full.stats &lt;- list(samp_fun_all = samp_fun_all)</span>
+<span class="co">#}</span>
+<span class="co">#samp_fun_all</span>
 <span class="co">#  ...</span>
  <span class="co"># output_vector[index] &lt;- output # save the output for each iteration</span>
 <span class="co">#}</span></code></pre></div>
@@ -449,7 +457,7 @@ samp.a &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class=
 samp.b &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n.b, <span class="dt">prob =</span> true.b)
 two_prop_test &lt;-<span class="st"> </span><span class="kw">prop.test</span>(<span class="kw">c</span>(samp.a, samp.b), <span class="kw">c</span>(<span class="dv">2000</span>, <span class="dv">2000</span>))
 two_prop_test<span class="op">$</span>p.value</code></pre></div>
-<pre><code>## [1] 4.290716e-19</code></pre>
+<pre><code>## [1] 2.323694e-15</code></pre>
 </div>
 
 

@@ -49,13 +49,14 @@ samp.output <- rexp(n = samp_size, rate = samp_rate)
 
 
 samp_fun <- function(samp_size, samp_rate) {
+  samp.output <- rexp(n = samp_size, rate = samp_rate)
   samp_avg <- mean(samp.output)
   samp_std_dev <- sd(samp.output)
   stats <- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)
   return(stats)
 }
 
-samp_fun(100000)
+samp_fun(100, 1/10000)
 ```
 
 ### Step 2
@@ -68,34 +69,41 @@ Then write a loop that does this:
 ```{r}
 
 # sample size
-samp_size <- 50
+#samp_size <- 50
 
 # set the rate parameter
-samp_rate <- 1/10000
+#samp_rate <- 1/10000
 
 # take sample
-samp.output <- rexp(n = samp_size, rate = samp_rate)
 
 
-samp_fun <- function(samp_size, samp_rate) {
-  samp_avg <- mean(samp.output)
-  samp_std_dev <- sd(samp.output)
-  stats <- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)
-  return(stats)
-}
+
+#samp_fun <- function(samp_size, samp_rate) {
+ # samp.output <- rexp(n = samp_size, rate = samp_rate)
+  #samp_avg <- mean(samp.output)
+  #samp_std_dev <- sd(samp.output)
+  #stats <- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)
+  #return(stats)
+#}
+#samp_fun(40,1/10000)
+
+#samp_avg
 
 #my_mods <- my_samps <- list() # empty lists for saving models and samples
 #for(i in 1:n) {
 
 # create space for the output of your loop 
-n <- 10
-sample_means <- rep(NA, n)
-sample_sds <- rep(NA, n)
+#n <- 4
+#sample_means <- rep(NA, n)
+#sample_sds <- rep(NA, n)
+#samp_fun_all <- rep(NA, n)
 
 # start the loop
-for(i in 1:n) {
-  sample_means[i] <- i
-}
+#for(i in 1:n) {
+ # samp_fun_all[i] <-  samp_fun(50, 1/10000)
+  #full.stats <- list(samp_fun_all = samp_fun_all)
+#}
+#samp_fun_all
 #  ...
  # output_vector[index] <- output # save the output for each iteration
 #}
